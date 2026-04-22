@@ -29,6 +29,9 @@ yet tagged — the first tagged release is tracked below under *Unreleased*.
 - `prompts/enrich_v2.txt` — strict protocol forcing verbatim evidence,
   confidence tagging and banning speculative wording (unless tagged
   `[SPECULATION]`).
+- `doliconstdoc.exportcsv` CLI — writes a 3-column CSV (`name`, `purpose`,
+  `where`) derived from the DB. `where` is `conf.php` when a wiring is
+  recorded, else the deduplicated admin UI paths, else `hidden`.
 
 ### Changed
 - `extract.py`: occurrence context window grown from ±2 lines to ±10 lines
