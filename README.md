@@ -8,10 +8,10 @@ SQLite base documenting every Dolibarr configuration constant (`getDolGlobalStri
 cd ~/work/dev/doliconstdoc
 
 # Phase 1 — extract occurrences (rg + PCRE2 + Python post-parse)
-PYTHONPATH=src python3 -m doliconstdoc.main --out doliconstdoc.sqlite extract /home/nzaou/dolibarr
+PYTHONPATH=src python3 -m doliconstdoc.main --out doliconstdoc.sqlite extract /path/to/dolibarr
 
 # Phase 2 — merge seed SQL defaults (llx_const.sql)
-PYTHONPATH=src python3 -m doliconstdoc.main --out doliconstdoc.sqlite seed /home/nzaou/dolibarr
+PYTHONPATH=src python3 -m doliconstdoc.main --out doliconstdoc.sqlite seed /path/to/dolibarr
 
 # Phase 3 — LLM enrichment (requires anthropic SDK + ANTHROPIC_API_KEY)
 pip install --break-system-packages anthropic
@@ -24,7 +24,7 @@ PYTHONPATH=src python3 -m doliconstdoc.main --out doliconstdoc.sqlite stats
 
 ## Current state (v0)
 
-- 3180 constants extracted from `/home/nzaou/dolibarr/htdocs/` (branch `develop` = 24.0.0-alpha, used as v23 proxy; version stored in `meta.dolibarr_version`).
+- 3180 constants extracted from `/path/to/dolibarr/htdocs/` (branch `develop` = 24.0.0-alpha, used as v23 proxy; version stored in `meta.dolibarr_version`).
 - 19316 occurrences.
 - 41 seed rows (default values from `install/mysql/data/llx_const.sql`).
 - 80 constants enriched in-session by Claude Opus (not via API) — all `MAIN_SECURITY_*` + top-frequency core ones.
@@ -52,7 +52,7 @@ The user's workflow is **in-session enrichment by Claude Code** (no API key, no 
 
 ### Recipe for a new Claude Code session
 
-1. Read this README and `~/.claude/projects/-home-nzaou/memory/reference_doliconstdoc.md` + `feedback_doliconstdoc_enrichment.md`.
+1. Read this README and `<your claude memory dir>/reference_doliconstdoc.md` + `feedback_doliconstdoc_enrichment.md`.
 2. Check progress: `PYTHONPATH=src python3 -m doliconstdoc.main --out doliconstdoc.sqlite stats` — see how many are already enriched.
 3. Select the next N un-enriched constants (user will say "go N"):
    ```python
@@ -133,7 +133,7 @@ The v2 prompt (`prompts/enrich_v2.txt`) additionally requires:
 
 ```bash
 # 1. Re-harvest comments + conf.php wiring on an existing extracted DB:
-PYTHONPATH=src python3 -m doliconstdoc.main --out doliconstdoc.sqlite harvest /home/nzaou/dolibarr
+PYTHONPATH=src python3 -m doliconstdoc.main --out doliconstdoc.sqlite harvest /path/to/dolibarr
 
 # 2. Dump a batch (ad-hoc names or SQL filter):
 PYTHONPATH=src python3 -m doliconstdoc.dump_batch \

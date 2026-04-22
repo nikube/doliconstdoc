@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "SQLite documentation base for Dolibarr constants"
 requires-python = ">=3.11"
 license = { text = "GPL-3.0-or-later" }
-authors = [{ name = "Nicolas Utt", email = "uttnicolas@gmail.com" }]
+authors = [{ name = "nikube", email = "nz@anatoleconseil.com" }]
 
 [project.urls]
 Homepage = "https://github.com/nikube/doliconstdoc"
