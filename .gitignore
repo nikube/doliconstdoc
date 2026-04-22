@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Claude Code project-local
+.claude/
+
+# Temporary enrichment artifacts
+_dump.py
+_apply.py
+_enrich_batch.py
+
+# Optional: keep the DB out of git, ship via GitHub Releases instead.
+# Comment the next line if you prefer committing the SQLite file.
+doliconstdoc.sqlite
+doliconstdoc.sqlite-journal
+doliconstdoc.sqlite-wal
+doliconstdoc.sqlite-shm

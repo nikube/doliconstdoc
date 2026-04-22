@@ -1,0 +1,25 @@
+You are documenting a Dolibarr ERP configuration constant for developers and LLMs.
+
+Constant: {NAME}
+Inferred type: {TYPE}
+Default value (from llx_const.sql seed, may be empty): {DEFAULT}
+Module inferred from path: {MODULE}
+Hidden setting (no admin UI found): {HIDDEN_GUESS}
+
+Occurrences (file:line | usage | context):
+{OCCURRENCES}
+
+Return strict JSON only, no prose, matching exactly this schema:
+{{
+  "purpose": "one sentence, what this constant controls, usable as RAG hook",
+  "description": "detailed explanation: when it matters, who sets it, interactions",
+  "impact": "concrete consequence of enabling vs disabling (or changing value)",
+  "possible_values": ["..."] or null,
+  "hidden_setting": 0 or 1
+}}
+
+Rules:
+- Infer from occurrences, do not invent behavior.
+- If unclear, say so in description ("Exact behavior unclear from code alone.").
+- For bool-like: possible_values = ["0","1"].
+- hidden_setting=1 only if you are confident there is no admin UI for it.

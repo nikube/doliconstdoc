@@ -1,0 +1,28 @@
+[project]
+name = "doliconstdoc"
+version = "0.1.0"
+description = "SQLite documentation base for Dolibarr constants"
+requires-python = ">=3.11"
+license = { text = "GPL-3.0-or-later" }
+authors = [{ name = "Nicolas Utt", email = "uttnicolas@gmail.com" }]
+
+[project.urls]
+Homepage = "https://github.com/nikube/doliconstdoc"
+Issues = "https://github.com/nikube/doliconstdoc/issues"
+dependencies = [
+    "tree-sitter>=0.23",
+    "tree-sitter-php>=0.23",
+    "anthropic>=0.40",
+    "httpx>=0.27",
+    "tqdm>=4.66",
+]
+
+[project.scripts]
+doliconstdoc = "doliconstdoc.main:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

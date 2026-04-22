@@ -1,0 +1,66 @@
+name: Build & release DB
+
+# Builds a doliconstdoc.sqlite against a pinned Dolibarr tag and attaches it
+# to a GitHub Release when a matching tag is pushed on this repo.
+#
+# This workflow only runs the deterministic phases (extract + seed + harvest
+# + stats). Enrichment requires an LLM and is NOT done here — attach a
+# pre-enriched DB manually, or add an enrichment step once ANTHROPIC_API_KEY
+# is configured as a repo secret.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dolibarr_ref:
+        description: 'Dolibarr git ref (tag or branch) to build against'
+        required: true
+        default: 'develop'
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout doliconstdoc
+        uses: actions/checkout@v4
+
+      - name: Checkout Dolibarr
+        uses: actions/checkout@v4
+        with:
+          repository: Dolibarr/dolibarr
+          ref: ${{ github.event.inputs.dolibarr_ref || 'develop' }}
+          path: dolibarr
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install ripgrep
+        run: sudo apt-get update && sudo apt-get install -y ripgrep
+
+      - name: Install project
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+
+      - name: Extract + seed + harvest
+        run: |
+          PYTHONPATH=src python -m doliconstdoc.main --out doliconstdoc.sqlite extract "$GITHUB_WORKSPACE/dolibarr"
+          PYTHONPATH=src python -m doliconstdoc.main --out doliconstdoc.sqlite seed    "$GITHUB_WORKSPACE/dolibarr"
+          PYTHONPATH=src python -m doliconstdoc.main --out doliconstdoc.sqlite harvest "$GITHUB_WORKSPACE/dolibarr"
+          PYTHONPATH=src python -m doliconstdoc.main --out doliconstdoc.sqlite stats
+
+      - name: Upload DB as workflow artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: doliconstdoc-sqlite
+          path: doliconstdoc.sqlite
+
+      - name: Attach DB to the GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: doliconstdoc.sqlite

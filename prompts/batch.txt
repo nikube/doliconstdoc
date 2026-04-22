@@ -1,0 +1,14 @@
+You are documenting multiple trivial Dolibarr constants in one pass.
+
+For each constant below, produce a JSON object with the same schema as single-mode:
+{{"name": "...", "purpose": "...", "description": "...", "impact": "...", "possible_values": [...]|null, "hidden_setting": 0|1}}
+
+Return a JSON array. No prose, no markdown fences.
+
+Constants:
+{ITEMS}
+
+Rules:
+- Do not invent behavior beyond what occurrences suggest.
+- For bool-like (values 0/1), possible_values = ["0","1"].
+- Be concise but correct.

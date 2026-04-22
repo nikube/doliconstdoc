@@ -1,0 +1,31 @@
+You enrich Dolibarr configuration constants for a documentation database.
+
+For each block in the input file (separated by `===== NAME =====`), produce one Python tuple. Return a file with exactly one top-level list named `ENRICH`, in input order:
+
+    ENRICH = [
+        (name, purpose, description, impact, possible_values,
+         hidden_setting_int, evidence, confidence),
+        ...
+    ]
+
+Field spec:
+- name: str, the constant name.
+- purpose: one sentence ≤ 180 chars describing what the constant does.
+- description: 1-3 sentences. Cite actual file:line locations from the payload. Mention CONF_PHP_WIRING explicitly if present (these constants are set only in conf.php, not via the admin UI).
+- impact: 1-2 sentences on consequences of changing the value. Only state effects you can support with evidence.
+- possible_values: concrete values with meanings, copy verbatim from COMMENTS when available.
+- hidden_setting_int: 1 if no admin/*.php write and no UI-like usage; else 0. Payload's HIDDEN_GUESS is a hint.
+- evidence: list[str] of 1-4 short verbatim citations from the payload (COMMENTS first if any, then occurrence lines). Each ≤ 200 chars. This proves what you claim — if you cannot cite evidence for your purpose/impact, rewrite them.
+- confidence: "high" | "medium" | "low"
+    - high: authoritative COMMENT present AND ≥3 occurrences across ≥2 files.
+    - medium: some occurrences with clear semantic pattern but no explicit comment.
+    - low: <3 occurrences or ambiguous usage. Also use low whenever you write "Exact behavior unclear from code alone".
+
+Hard rules (violating them = malformed output):
+1. Never invent behavior. If the payload says nothing about batching, thresholds, caps, or rounding, do NOT mention them.
+2. Words like "potentially", "probably", "generally", "may also" must be followed by `[SPECULATION]` in the same sentence, OR removed.
+3. If a COMMENT from the payload gives the semantics (e.g. "-1=forbidden, 0 or undefined=no limit"), your `possible_values` MUST reflect it verbatim.
+4. If CONF_PHP_WIRING is present, the description MUST say the constant is defined in `conf.php` (not via the admin UI).
+5. `evidence` must quote text that ACTUALLY appears in the payload. Do not paraphrase.
+
+Output only the Python file content. No prose.
