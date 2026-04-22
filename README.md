@@ -24,11 +24,11 @@ PYTHONPATH=src python3 -m doliconstdoc.main --out doliconstdoc.sqlite stats
 
 ## Current state (v0)
 
-- 3180 constants extracted from `/path/to/dolibarr/htdocs/` (branch `develop` = 24.0.0-alpha, used as v23 proxy; version stored in `meta.dolibarr_version`).
-- 19316 occurrences.
-- 41 seed rows (default values from `install/mysql/data/llx_const.sql`).
-- 80 constants enriched in-session by Claude Opus (not via API) — all `MAIN_SECURITY_*` + top-frequency core ones.
-- 24 `hidden_setting=1` confirmed (heuristic flagged 15 via `hidden_setting_guess`).
+- Built against Dolibarr `develop` (24.0.0-alpha) to anticipate the next stable release; the exact version is recorded in `meta.dolibarr_version`.
+- 3180 constants, 19316 occurrences, 41 seed defaults (from `install/mysql/data/llx_const.sql`).
+- 1144 comment lines harvested that literally name a known constant, on ~470 distinct constants.
+- 3180 / 3180 enriched under the v2 prompt (`evidence` + `confidence` + `conf_php_wiring`). Confidence distribution: 1137 high / 843 medium / 1199 low.
+- 1975 `hidden_setting=1` confirmed (same as `hidden_setting_guess`, heuristic = no `admin/*.php` occurrence).
 
 ## Pipeline
 
@@ -107,9 +107,10 @@ meta(key PK, value)  -- keys: dolibarr_version, extract_date, hash_version, prom
 
 ## Anti-hallucination pipeline (v2)
 
-Early enrichment runs hallucinated semantics (e.g. `MAILING_LIMIT_SENDBYCLI`
-was described as a "batch size cap" when the actual comment says
-`// -1=forbidden, 0 or undefined=no limit`). Three fixes:
+Enrichment is done by an LLM, which will happily extrapolate semantics from a
+narrow context window when the code alone is ambiguous. Treat the generated
+fields as a starting point, not ground truth — especially the rows tagged
+`confidence='low'`. Three measures reduce the risk:
 
 1. **Extended context**: `extract.py` now uses ±10 lines around `check`/`write`
    occurrences (vs ±2 before), so authoritative comments a few lines above the
