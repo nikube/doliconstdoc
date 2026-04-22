@@ -150,6 +150,22 @@ doliconstdoc/
     └── main.py                # top-level CLI
 ```
 
+## Versioning
+
+Tags follow **`vMAJOR.MINOR`** where:
+
+- `MAJOR` = documented Dolibarr version (`23`, `24`, …).
+- `MINOR` = iteration on that version (corrections, re-enrichment, new
+  constants …).
+
+Examples: `v24.0` initial release for Dolibarr 24, `v24.1` follow-up fixes,
+`v25.0` first release for Dolibarr 25. Older majors keep receiving fixes on
+a maintenance branch (`23.x`) only if someone actively asks for it;
+otherwise the last `v23.*` release stays available indefinitely.
+
+The exact upstream source version used for a given tag is stored in the DB
+itself: `SELECT value FROM meta WHERE key='dolibarr_version'`.
+
 ## License
 
 GPL-3.0-or-later. See [LICENSE](LICENSE).

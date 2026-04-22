@@ -15,9 +15,6 @@ on:
         description: 'Dolibarr git ref (tag or branch) to build against'
         required: true
         default: 'develop'
-  push:
-    tags:
-      - 'v*'
 
 jobs:
   build:
