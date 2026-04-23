@@ -63,11 +63,12 @@ def main():
         else:
             print(f"  skip malformed tuple: {t[:2]}")
             continue
+        # Never overwrite human-reviewed rows (doc_quality=2).
         conn.execute(
             """UPDATE constants SET purpose=?, description=?, impact=?,
                    possible_values=?, hidden_setting=?, doc_quality=1,
                    last_enriched=?, evidence=?, confidence=?
-               WHERE name=?""",
+               WHERE name=? AND (doc_quality IS NULL OR doc_quality < 2)""",
             (purpose, desc, impact, pv, int(hidden), now,
              evidence, confidence, name),
         )

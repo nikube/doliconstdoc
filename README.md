@@ -21,7 +21,28 @@ contains the tooling that produces it.
   1199 low.
 - 1975 `hidden_setting=1` (no `admin/*.php` write occurrence).
 
-## Quickstart — build the DB locally
+## Repo layout
+
+- `data/` — deterministic SQL dump of every table (`schema.sql`,
+  `constants.sql`, `occurrences.sql`, `comments.sql`, `meta.sql`). This is
+  the diffable source of truth. Human corrections are PRs against
+  `data/constants.sql` (see [CONTRIBUTING.md](CONTRIBUTING.md)).
+- `doliconstdoc.sqlite` — the consumer artefact, rebuilt from `data/`.
+  Shipped as a GitHub Release asset; not committed.
+- `src/doliconstdoc/` — the tooling that produces `data/` and
+  `doliconstdoc.sqlite`.
+
+## Rebuilding the SQLite from `data/`
+
+```bash
+PYTHONPATH=src python3 -m doliconstdoc.sqldump load \
+    --src data --out doliconstdoc.sqlite
+```
+
+Round-trip (dump → load) is byte-stable: two consecutive dumps produce
+identical files.
+
+## Quickstart — build the DB from a Dolibarr source tree
 
 Requires Python 3.11+, `ripgrep`, and a local Dolibarr checkout.
 
@@ -133,6 +154,12 @@ Or open `doliconstdoc.sqlite` in DB Browser for SQLite.
 
 ```
 doliconstdoc/
+├── data/                      # diffable SQL dump — source of truth
+│   ├── schema.sql
+│   ├── constants.sql          # human-editable via PR (doc_quality=2)
+│   ├── occurrences.sql        # machine-only
+│   ├── comments.sql           # machine-only
+│   └── meta.sql
 ├── prompts/
 │   ├── enrich_v2.txt          # active prompt (evidence + confidence)
 │   ├── single.txt             # legacy
@@ -145,6 +172,8 @@ doliconstdoc/
     ├── payload.py             # per-constant payload for the LLM
     ├── dump_batch.py          # CLI: write /tmp/batch_*.txt
     ├── apply_batch.py         # CLI: merge /tmp/enrich_*.py
+    ├── sqldump.py             # CLI: dump DB ↔ data/*.sql
+    ├── exportcsv.py           # CLI: 3-column CSV export
     ├── enrich.py              # legacy API-based enrichment
     ├── hash.py                # content_hash for incremental runs
     └── main.py                # top-level CLI

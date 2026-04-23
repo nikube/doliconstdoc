@@ -32,6 +32,15 @@ yet tagged — the first tagged release is tracked below under *Unreleased*.
 - `doliconstdoc.exportcsv` CLI — writes a 3-column CSV (`name`, `purpose`,
   `where`) derived from the DB. `where` is `conf.php` when a wiring is
   recorded, else the deduplicated admin UI paths, else `hidden`.
+- `doliconstdoc.sqldump` CLI with `dump` and `load` subcommands. Writes
+  `data/{schema,constants,occurrences,comments,meta}.sql` with one
+  `INSERT` per row, sorted by primary key, newlines escaped as
+  `|| char(10) || …` so diffs stay line-oriented.
+- `data/` directory committed: the SQL dump is now the diffable source of
+  truth; `doliconstdoc.sqlite` is always rebuildable from it.
+- `doc_quality=2` semantics: rows flagged as human-reviewed are never
+  overwritten by `apply_batch` and are excluded by `dump_batch` unless
+  `--include-human-reviewed` is passed.
 
 ### Changed
 - `extract.py`: occurrence context window grown from ±2 lines to ±10 lines

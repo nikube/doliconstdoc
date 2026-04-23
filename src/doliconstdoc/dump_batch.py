@@ -36,18 +36,27 @@ def main():
     ap.add_argument("--dir", default="/tmp", help="Output directory for batch_*.txt")
     ap.add_argument("--batch-file", help="Single-file mode: write all to this path")
     ap.add_argument("--limit", type=int, default=0, help="Cap total constants (0 = no cap)")
+    ap.add_argument("--include-human-reviewed", action="store_true",
+                    help="Also enrich doc_quality=2 rows (default: skip them)")
     args = ap.parse_args()
 
     conn = connect(args.out)
+    # Protect human-reviewed rows: they are skipped from enrichment selections
+    # regardless of the filter. Use `--include-human-reviewed` to override.
+    exclude = "" if args.include_human_reviewed else \
+        " (doc_quality IS NULL OR doc_quality < 2)"
+    join = " AND" if exclude else ""
     if args.names:
         names = [n.strip() for n in args.names.split(",") if n.strip()]
     elif args.filter:
-        sql = f"SELECT name FROM constants WHERE {args.filter}"
+        sql = f"SELECT name FROM constants WHERE {args.filter}{join}{exclude}"
         if args.limit:
             sql += f" LIMIT {args.limit}"
         names = [r[0] for r in conn.execute(sql)]
     else:
-        names = [r[0] for r in conn.execute("SELECT name FROM constants ORDER BY name")]
+        where = f" WHERE {exclude.strip()}" if exclude else ""
+        names = [r[0] for r in conn.execute(
+            f"SELECT name FROM constants{where} ORDER BY name")]
         if args.limit:
             names = names[: args.limit]
 
