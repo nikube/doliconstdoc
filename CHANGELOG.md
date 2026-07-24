@@ -1,10 +1,29 @@
 # Changelog
 
 All notable changes to this project are documented here. The format follows
-[Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions are not
-yet tagged — the first tagged release is tracked below under *Unreleased*.
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Tags follow
+`vMAJOR.MINOR` (see README).
 
-## [Unreleased]
+## [24.1] - 2026-07-24
+
+### Changed
+- Re-extracted against Dolibarr `develop` @ `a4d355d24f` (2026-07-24):
+  3219 constants (59 added, 20 removed, 391 with changed usage since the
+  April v24.0 extraction), 18800 occurrences, 1056 comments.
+- Re-enriched the 450 added/changed constants (Sonnet batch pipeline).
+- Deep-dive re-enrichment of all 1243 low-confidence constants: agents
+  investigated the actual source tree (code around each occurrence, missed
+  admin UI writes, dead/commented-out references) instead of the extracted
+  payload only. Confidence distribution moves from 1018/957/1243
+  (high/medium/low) to **1555/1608/56**; the surviving lows are documented
+  dead code, source typos (`FATURE_LOCAL_TAX2_OPTION`,
+  `MAIN_MAIL_SMTPS_IDT`), dynamic name prefixes or write-only orphans.
+- ~40 `hidden_setting` corrections where a real admin UI write existed but
+  was missed by the extractor (`ajax_constantonoff`, `setModuleOptions`
+  forms, numbering-module inline forms).
+- `meta` now records `dolibarr_version` and `dolibarr_commit`.
+
+## [24.0] - 2026-04-22
 
 ### Added
 - `comments` table capturing single-line and block PHP comments that literally
