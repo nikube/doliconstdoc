@@ -4,6 +4,26 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Tags follow
 `vMAJOR.MINOR` (see README).
 
+## [24.2] - 2026-10-25
+
+### Changed
+- Re-extracted against the Dolibarr **stable tag `24.0.2`** @ `7e92776476`
+  (2026-10-02) instead of `develop`: 3231 constants (16 added, 4 removed,
+  60 with changed usage since v24.1), 18882 occurrences, 1083 comments.
+- 16 new constants enriched from a source-level read (Opus), 60 changed
+  constants updated against the new code (Sonnet). Confidence distribution:
+  **1559 high / 1610 medium / 62 low**.
+- Notable corrections: `MAIN_INFO_LOCALTAX_CALC` is really the dynamic
+  `MAIN_INFO_LOCALTAX_CALC1/2` written by `admin/company.php`;
+  `PRODUCT_ADDON_PDF` no longer falls back to `strato`;
+  `PROJECT_CAN_ALWAYS_LINK_TO_ALL_SUPPLIERS` defaults to 1 in
+  `conf.class.php`; `PDF_USE_A` documents values 0/1/3; `PRODUCT_USE_UNITS`
+  and `TICKET_EMAIL_MUST_EXISTS` admin switches are commented out
+  (hidden); `SUBTOTAL_TITLE_` is toggled by `admin/subtotals.php`.
+- Removed: `AVAILABILITIES_ADDON_PDF`, `HOLIDAY_DISALLOW_NEGATIVE_BALANCE`,
+  `MAIN_SOCIETE_SHOW_COMPLETE_NAME`, `MAIN_USE_DOL_EVAL_NEW`.
+- `hidden_setting_guess` recomputed from `admin_ui_files` (2006).
+
 ## [24.1] - 2026-07-24
 
 ### Changed

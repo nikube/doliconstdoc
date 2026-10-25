@@ -11,19 +11,19 @@ contains the tooling that produces it.
 
 ## Current state
 
-- Built against Dolibarr `develop` (24.0.0-alpha, commit `a4d355d24f`,
-  2026-07-24) to track the next stable release; the exact source version is
-  recorded in `meta.dolibarr_version` / `meta.dolibarr_commit`.
-- **3219 constants**, 18800 occurrences, 41 seed defaults (from
-  `install/mysql/data/llx_const.sql`), 1056 comment lines that literally
+- Built against Dolibarr stable tag `24.0.2` (commit `7e92776476`,
+  2026-10-02); the exact source version is recorded in
+  `meta.dolibarr_version` / `meta.dolibarr_commit`.
+- **3231 constants**, 18882 occurrences, 41 seed defaults (from
+  `install/mysql/data/llx_const.sql`), 1083 comment lines that literally
   name a known constant.
-- **All 3219 enriched** under the v2 prompt (evidence + confidence +
+- **All 3231 enriched** under the v2 prompt (evidence + confidence +
   `conf.php` wiring), with a source-level deep-dive pass over every
   low-confidence constant (agents read the actual code around each
-  occurrence). Confidence distribution: 1555 high / 1608 medium / 56 low —
+  occurrence). Confidence distribution: 1559 high / 1610 medium / 62 low —
   the remaining lows are documented dead code, source typos, dynamic name
   prefixes or write-only orphans.
-- 1896 `hidden_setting=1` (no `admin/*.php` write occurrence).
+- 1596 `hidden_setting=1` (no `admin/*.php` write occurrence).
 
 ## Repo layout
 
